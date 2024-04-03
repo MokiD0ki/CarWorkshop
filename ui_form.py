@@ -34,64 +34,47 @@ class Ui_MainWindow(object):
         self.main_window_tab.setGeometry(QRect(0, 0, 801, 561))
         self.employees_tab = QWidget()
         self.employees_tab.setObjectName(u"employees_tab")
-        self.widget = QWidget(self.employees_tab)
-        self.widget.setObjectName(u"widget")
-        self.widget.setGeometry(QRect(10, 10, 251, 501))
-        self.verticalLayout = QVBoxLayout(self.widget)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.employee_list_label = QLabel(self.widget)
-        self.employee_list_label.setObjectName(u"employee_list_label")
-
-        self.verticalLayout.addWidget(self.employee_list_label)
-
-        self.employees_list = QListWidget(self.widget)
-        self.employees_list.setObjectName(u"employees_list")
-
-        self.verticalLayout.addWidget(self.employees_list)
-
-        self.frame = QFrame(self.employees_tab)
-        self.frame.setObjectName(u"frame")
-        self.frame.setGeometry(QRect(350, 10, 441, 511))
-        self.frame.setFrameShape(QFrame.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Raised)
-        self.employee_data_widget = QWidget(self.frame)
+        self.employee_data_frame = QFrame(self.employees_tab)
+        self.employee_data_frame.setObjectName(u"employee_data_frame")
+        self.employee_data_frame.setGeometry(QRect(397, 0, 391, 521))
+        self.employee_data_frame.setFrameShape(QFrame.StyledPanel)
+        self.employee_data_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_7 = QVBoxLayout(self.employee_data_frame)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.employee_data_widget = QWidget(self.employee_data_frame)
         self.employee_data_widget.setObjectName(u"employee_data_widget")
-        self.employee_data_widget.setGeometry(QRect(0, 0, 441, 501))
-        self.employee_calendar = QCalendarWidget(self.employee_data_widget)
-        self.employee_calendar.setObjectName(u"employee_calendar")
-        self.employee_calendar.setGeometry(QRect(140, 330, 301, 171))
-        self.employee_calendar.setGridVisible(True)
-        self.remove_employee_button = QPushButton(self.employee_data_widget)
-        self.remove_employee_button.setObjectName(u"remove_employee_button")
-        self.remove_employee_button.setGeometry(QRect(300, 0, 141, 31))
+        self.verticalLayout_4 = QVBoxLayout(self.employee_data_widget)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.add_employee_button = QPushButton(self.employee_data_widget)
         self.add_employee_button.setObjectName(u"add_employee_button")
-        self.add_employee_button.setGeometry(QRect(0, 0, 161, 31))
-        self.widget1 = QWidget(self.employee_data_widget)
-        self.widget1.setObjectName(u"widget1")
-        self.widget1.setGeometry(QRect(12, 42, 261, 131))
-        self.horizontalLayout = QHBoxLayout(self.widget1)
+
+        self.verticalLayout_4.addWidget(self.add_employee_button)
+
+        self.remove_employee_button = QPushButton(self.employee_data_widget)
+        self.remove_employee_button.setObjectName(u"remove_employee_button")
+
+        self.verticalLayout_4.addWidget(self.remove_employee_button)
+
+        self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_3 = QVBoxLayout()
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.employee_name_label = QLabel(self.widget1)
+        self.employee_name_label = QLabel(self.employee_data_widget)
         self.employee_name_label.setObjectName(u"employee_name_label")
 
         self.verticalLayout_3.addWidget(self.employee_name_label)
 
-        self.employee_surname_label = QLabel(self.widget1)
+        self.employee_surname_label = QLabel(self.employee_data_widget)
         self.employee_surname_label.setObjectName(u"employee_surname_label")
 
         self.verticalLayout_3.addWidget(self.employee_surname_label)
 
-        self.employee_salary_label = QLabel(self.widget1)
+        self.employee_salary_label = QLabel(self.employee_data_widget)
         self.employee_salary_label.setObjectName(u"employee_salary_label")
 
         self.verticalLayout_3.addWidget(self.employee_salary_label)
 
-        self.employe_id_label = QLabel(self.widget1)
+        self.employe_id_label = QLabel(self.employee_data_widget)
         self.employe_id_label.setObjectName(u"employe_id_label")
 
         self.verticalLayout_3.addWidget(self.employe_id_label)
@@ -101,28 +84,69 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2 = QVBoxLayout()
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.employee_name_edit = QLineEdit(self.widget1)
+        self.employee_name_edit = QLineEdit(self.employee_data_widget)
         self.employee_name_edit.setObjectName(u"employee_name_edit")
 
         self.verticalLayout_2.addWidget(self.employee_name_edit)
 
-        self.employee_surname_edit = QLineEdit(self.widget1)
+        self.employee_surname_edit = QLineEdit(self.employee_data_widget)
         self.employee_surname_edit.setObjectName(u"employee_surname_edit")
 
         self.verticalLayout_2.addWidget(self.employee_surname_edit)
 
-        self.employee_salary_edit = QLineEdit(self.widget1)
+        self.employee_salary_edit = QLineEdit(self.employee_data_widget)
         self.employee_salary_edit.setObjectName(u"employee_salary_edit")
 
         self.verticalLayout_2.addWidget(self.employee_salary_edit)
 
-        self.employee_id_edit = QLineEdit(self.widget1)
+        self.employee_id_edit = QLineEdit(self.employee_data_widget)
         self.employee_id_edit.setObjectName(u"employee_id_edit")
 
         self.verticalLayout_2.addWidget(self.employee_id_edit)
 
 
         self.horizontalLayout.addLayout(self.verticalLayout_2)
+
+
+        self.verticalLayout_4.addLayout(self.horizontalLayout)
+
+        self.employee_calendar = QCalendarWidget(self.employee_data_widget)
+        self.employee_calendar.setObjectName(u"employee_calendar")
+        self.employee_calendar.setGridVisible(True)
+
+        self.verticalLayout_4.addWidget(self.employee_calendar)
+
+
+        self.verticalLayout_7.addWidget(self.employee_data_widget)
+
+        self.emploees_list_frame = QFrame(self.employees_tab)
+        self.emploees_list_frame.setObjectName(u"emploees_list_frame")
+        self.emploees_list_frame.setGeometry(QRect(0, 0, 361, 521))
+        self.emploees_list_frame.setFrameShape(QFrame.StyledPanel)
+        self.emploees_list_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout = QVBoxLayout(self.emploees_list_frame)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.employee_list_widget = QWidget(self.emploees_list_frame)
+        self.employee_list_widget.setObjectName(u"employee_list_widget")
+        self.verticalLayout_6 = QVBoxLayout(self.employee_list_widget)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_5 = QVBoxLayout()
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.employee_list_label = QLabel(self.employee_list_widget)
+        self.employee_list_label.setObjectName(u"employee_list_label")
+
+        self.verticalLayout_5.addWidget(self.employee_list_label)
+
+        self.employees_list = QListWidget(self.employee_list_widget)
+        self.employees_list.setObjectName(u"employees_list")
+
+        self.verticalLayout_5.addWidget(self.employees_list)
+
+
+        self.verticalLayout_6.addLayout(self.verticalLayout_5)
+
+
+        self.verticalLayout.addWidget(self.employee_list_widget)
 
         self.main_window_tab.addTab(self.employees_tab, "")
         self.tickets_tab = QWidget()
@@ -151,13 +175,13 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.employee_list_label.setText(QCoreApplication.translate("MainWindow", u"Employees", None))
-        self.remove_employee_button.setText(QCoreApplication.translate("MainWindow", u"Remove Employee", None))
         self.add_employee_button.setText(QCoreApplication.translate("MainWindow", u"Add Employee", None))
+        self.remove_employee_button.setText(QCoreApplication.translate("MainWindow", u"Remove Employee", None))
         self.employee_name_label.setText(QCoreApplication.translate("MainWindow", u"Name:", None))
         self.employee_surname_label.setText(QCoreApplication.translate("MainWindow", u"Surname:", None))
         self.employee_salary_label.setText(QCoreApplication.translate("MainWindow", u"Salary $/h:", None))
         self.employe_id_label.setText(QCoreApplication.translate("MainWindow", u"Employee_id:", None))
+        self.employee_list_label.setText(QCoreApplication.translate("MainWindow", u"Employees", None))
         self.main_window_tab.setTabText(self.main_window_tab.indexOf(self.employees_tab), QCoreApplication.translate("MainWindow", u"Employees", None))
         self.main_window_tab.setTabText(self.main_window_tab.indexOf(self.tickets_tab), QCoreApplication.translate("MainWindow", u"Tickets", None))
         self.menucar.setTitle(QCoreApplication.translate("MainWindow", u"Save", None))

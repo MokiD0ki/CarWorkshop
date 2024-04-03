@@ -20,8 +20,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             item = QListWidgetItem(employee[1] + ' ' + employee[2])
             item.setData(Qt.UserRole, employee[0])
             self.ui.employees_list.addItem(item)
+        self.clear_employee_screen()
         
         self.ui.employees_list.itemClicked.connect(self.on_employee_selected)
+        self.ui.add_employee_button.clicked.connect(self.add_employee)
 
     def on_employee_selected(self):
         # Get the selected employee's id, name, surname and salary
@@ -40,26 +42,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui.employee_id_edit.setEnabled(False)
 
         # Connect the remove_employee method to the remove_employee_button
-        self.ui.remove_employee_button.clicked.connect(lambda: self.remove_employee(curr_employee_id))
+        self.ui.remove_employee_button.clicked.connect(self.remove_employee)
 
+    def remove_employee(self):
+        curr_item = self.ui.employees_list.currentItem()
+        if curr_item is not None:
+            curr_employee_id = curr_item.data(Qt.UserRole)
+            self.remove_employee_helper(curr_employee_id)
+            
 
-    def remove_employee(self, employee_id):
-        # Remove the selected employee from the database
-        if employee_id is None:
-            return
-        
+    def remove_employee_helper(self, employee_id):
         self.c.execute('''DELETE FROM employees WHERE id=?''', (employee_id,))
         self.conn.commit()
 
         self.clear_employee_screen()
 
         # Remove the selected employee from the list
-        selected_item = self.ui.employees_list.currentItem()
-        if selected_item is not None:
-            self.ui.employees_list.takeItem(self.ui.employees_list.row(selected_item))
+        for i in range(self.ui.employees_list.count()):
+            if self.ui.employees_list.item(i).data(Qt.UserRole) == employee_id:
+                self.ui.employees_list.takeItem(i)
+                break
         
         # Set the current selection to None
         self.ui.employees_list.setCurrentItem(None)
+        self.clear_employee_screen()
         
 
     def clear_employee_screen(self):
@@ -72,6 +78,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui.employee_id_edit.clear()
         self.ui.employee_id_edit.setEnabled(False)
 
+    
+    def add_employee(self):
+        self.add_employee_helper()
+        self.ui.employee_name_edit.setEnabled(True)
+        self.ui.employee_surname_edit.setEnabled(True)
+        self.ui.employee_salary_edit.setEnabled(True)
+
+        name = self.ui.employee_name_edit.text().strip().capitalize()
+        surname = self.ui.employee_surname_edit.text().strip().capitalize()
+        salary = self.ui.employee_salary_edit.text().strip()
+
+        if name != '' and surname != '' and salary != '':
+            self.c.execute('''INSERT INTO employees VALUES(NULL, ?, ?, ?)''', (name, surname, salary))
+            self.conn.commit()
+
+            item = QListWidgetItem(name + ' ' + surname)
+            item.setData(Qt.UserRole, self.c.lastrowid)
+            self.ui.employees_list.addItem(item)
+
+            self.clear_employee_screen()
+        else:
+            print(f"name: '{name}', surname: '{surname}', salary: '{salary}'")
+            print('Please fill in all fields')
+
+
+    def add_employee_helper(self):
+        employee_id = self.ui.employee_id_edit.text().strip()
+        if self.ui.employees_list.currentItem() and self.ui.employees_list.currentItem().data(Qt.UserRole) == int(employee_id):
+            self.clear_employee_screen()
+            self.ui.employees_list.setCurrentItem(None)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
