@@ -1,0 +1,3 @@
+.ui
+*.pyc
+__pycache__/
