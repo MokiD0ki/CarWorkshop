@@ -1,18 +1,30 @@
 import sqlite3
+import sqlite3
 
-# Step 1: Create a connection object
 conn = sqlite3.connect('employees.db')
 
-# Step 2: Create a cursor object
 c = conn.cursor()
 
-# Step 3: Execute a SQL command
 c.execute('''
     CREATE TABLE IF NOT EXISTS employees(
-        id INTEGER PRIMARY KEY,
+        employee_id INTEGER PRIMARY KEY,
         name TEXT,
         surname TEXT,
         salary REAL
+    )
+''')
+
+c.execute('''
+    CREATE TABLE IF NOT EXISTS tickets(
+        ticket_id INTEGER PRIMARY KEY,
+        ticket_status TEXT,
+        car_brand TEXT,
+        car_model TEXT,
+        car_registration_id TEXT,
+        ticket_description TEXT,
+        time_slot TEXT,
+        employee_id INTEGER,
+        FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
     )
 ''')
 
@@ -45,7 +57,15 @@ c.execute('''
 #         (NULL, 'Chris', 'Thompson', 270)
 # ''')
 
+# c.execute('''INSERT INTO tickets 
+#         VALUES(NULL, 'Created', 'Toyota', 'Corolla', 'ABC123', 'Engine failure', '31-04-2024-12:00-16:00', NULL),
+#         (NULL, 'Created', 'Toyota', 'Prius', 'KFC123', 'Engine failure', '30-04-2024-12:00-16:00', NULL),
+#         (NULL, 'Created', 'Mazda', 'Corolla', 'GFD777', 'Engine failure', '29-04-2024-12:00-16:00', NULL)
+# ''')
+
+
 c.execute('''SELECT * FROM employees''')
+c.execute('''SELECT * FROM tickets''')
 
 print(c.fetchall())
 

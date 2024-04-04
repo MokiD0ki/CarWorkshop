@@ -12,11 +12,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
+        
         self.ui.setupUi(self)
         self.conn = sqlite3.connect('employees.db')
         self.c = self.conn.cursor()
 
-        for employee in self.c.execute('''SELECT id, name, surname FROM employees'''):
+        for employee in self.c.execute('''SELECT employee_id, name, surname FROM employees'''):
             item = QListWidgetItem(employee[1] + ' ' + employee[2])
             item.setData(Qt.UserRole, employee[0])
             self.ui.employees_list.addItem(item)
@@ -36,7 +37,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui.employee_name_edit.setEnabled(True)
         self.ui.employee_surname_edit.setText(curr_surname)
         self.ui.employee_surname_edit.setEnabled(True)
-        self.ui.employee_salary_edit.setText(str(self.c.execute('''SELECT salary FROM employees WHERE id=?''', (curr_employee_id,)).fetchone()[0]))
+        self.ui.employee_salary_edit.setText(str(self.c.execute('''SELECT salary FROM employees WHERE employee_id=?''', (curr_employee_id,)).fetchone()[0]))
         self.ui.employee_salary_edit.setEnabled(True)
         self.ui.employee_id_edit.setText(str(curr_employee_id))
         self.ui.employee_id_edit.setEnabled(False)
@@ -49,10 +50,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if curr_item is not None:
             curr_employee_id = curr_item.data(Qt.UserRole)
             self.remove_employee_helper(curr_employee_id)
-            
+
 
     def remove_employee_helper(self, employee_id):
-        self.c.execute('''DELETE FROM employees WHERE id=?''', (employee_id,))
+        self.c.execute('''DELETE FROM employees WHERE employee_id=?''', (employee_id,))
         self.conn.commit()
 
         self.clear_employee_screen()
@@ -108,6 +109,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.ui.employees_list.currentItem() and self.ui.employees_list.currentItem().data(Qt.UserRole) == int(employee_id):
             self.clear_employee_screen()
             self.ui.employees_list.setCurrentItem(None)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

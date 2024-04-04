@@ -16,27 +16,60 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QCalendarWidget, QFrame, QHBoxLayout,
-    QLabel, QLineEdit, QListWidget, QListWidgetItem,
-    QMainWindow, QMenu, QMenuBar, QPushButton,
-    QSizePolicy, QStatusBar, QTabWidget, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QCalendarWidget, QFrame, QGridLayout,
+    QHBoxLayout, QLabel, QLineEdit, QListWidget,
+    QListWidgetItem, QMainWindow, QMenu, QMenuBar,
+    QPushButton, QSizePolicy, QStatusBar, QTabWidget,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(818, 528)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
+        self.gridLayout = QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName(u"gridLayout")
         self.main_window_tab = QTabWidget(self.centralwidget)
         self.main_window_tab.setObjectName(u"main_window_tab")
-        self.main_window_tab.setGeometry(QRect(0, 0, 801, 561))
         self.employees_tab = QWidget()
         self.employees_tab.setObjectName(u"employees_tab")
+        self.gridLayout_2 = QGridLayout(self.employees_tab)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.emploees_list_frame = QFrame(self.employees_tab)
+        self.emploees_list_frame.setObjectName(u"emploees_list_frame")
+        self.emploees_list_frame.setFrameShape(QFrame.StyledPanel)
+        self.emploees_list_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayout = QVBoxLayout(self.emploees_list_frame)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.employee_list_widget = QWidget(self.emploees_list_frame)
+        self.employee_list_widget.setObjectName(u"employee_list_widget")
+        self.verticalLayout_6 = QVBoxLayout(self.employee_list_widget)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_5 = QVBoxLayout()
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.employee_list_label = QLabel(self.employee_list_widget)
+        self.employee_list_label.setObjectName(u"employee_list_label")
+
+        self.verticalLayout_5.addWidget(self.employee_list_label)
+
+        self.employees_list = QListWidget(self.employee_list_widget)
+        self.employees_list.setObjectName(u"employees_list")
+
+        self.verticalLayout_5.addWidget(self.employees_list)
+
+
+        self.verticalLayout_6.addLayout(self.verticalLayout_5)
+
+
+        self.verticalLayout.addWidget(self.employee_list_widget)
+
+
+        self.gridLayout_2.addWidget(self.emploees_list_frame, 0, 0, 1, 1, Qt.AlignHCenter)
+
         self.employee_data_frame = QFrame(self.employees_tab)
         self.employee_data_frame.setObjectName(u"employee_data_frame")
-        self.employee_data_frame.setGeometry(QRect(397, 0, 391, 521))
         self.employee_data_frame.setFrameShape(QFrame.StyledPanel)
         self.employee_data_frame.setFrameShadow(QFrame.Raised)
         self.verticalLayout_7 = QVBoxLayout(self.employee_data_frame)
@@ -119,46 +152,23 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_7.addWidget(self.employee_data_widget)
 
-        self.emploees_list_frame = QFrame(self.employees_tab)
-        self.emploees_list_frame.setObjectName(u"emploees_list_frame")
-        self.emploees_list_frame.setGeometry(QRect(0, 0, 361, 521))
-        self.emploees_list_frame.setFrameShape(QFrame.StyledPanel)
-        self.emploees_list_frame.setFrameShadow(QFrame.Raised)
-        self.verticalLayout = QVBoxLayout(self.emploees_list_frame)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.employee_list_widget = QWidget(self.emploees_list_frame)
-        self.employee_list_widget.setObjectName(u"employee_list_widget")
-        self.verticalLayout_6 = QVBoxLayout(self.employee_list_widget)
-        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.verticalLayout_5 = QVBoxLayout()
-        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.employee_list_label = QLabel(self.employee_list_widget)
-        self.employee_list_label.setObjectName(u"employee_list_label")
 
-        self.verticalLayout_5.addWidget(self.employee_list_label)
-
-        self.employees_list = QListWidget(self.employee_list_widget)
-        self.employees_list.setObjectName(u"employees_list")
-
-        self.verticalLayout_5.addWidget(self.employees_list)
-
-
-        self.verticalLayout_6.addLayout(self.verticalLayout_5)
-
-
-        self.verticalLayout.addWidget(self.employee_list_widget)
+        self.gridLayout_2.addWidget(self.employee_data_frame, 0, 1, 1, 1)
 
         self.main_window_tab.addTab(self.employees_tab, "")
         self.tickets_tab = QWidget()
         self.tickets_tab.setObjectName(u"tickets_tab")
         self.main_window_tab.addTab(self.tickets_tab, "")
+
+        self.gridLayout.addWidget(self.main_window_tab, 0, 0, 1, 1)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 800, 22))
+        self.menubar.setGeometry(QRect(0, 0, 818, 22))
         self.menucar = QMenu(self.menubar)
         self.menucar.setObjectName(u"menucar")
         MainWindow.setMenuBar(self.menubar)
@@ -175,13 +185,13 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.employee_list_label.setText(QCoreApplication.translate("MainWindow", u"Employees", None))
         self.add_employee_button.setText(QCoreApplication.translate("MainWindow", u"Add Employee", None))
         self.remove_employee_button.setText(QCoreApplication.translate("MainWindow", u"Remove Employee", None))
         self.employee_name_label.setText(QCoreApplication.translate("MainWindow", u"Name:", None))
         self.employee_surname_label.setText(QCoreApplication.translate("MainWindow", u"Surname:", None))
         self.employee_salary_label.setText(QCoreApplication.translate("MainWindow", u"Salary $/h:", None))
         self.employe_id_label.setText(QCoreApplication.translate("MainWindow", u"Employee_id:", None))
-        self.employee_list_label.setText(QCoreApplication.translate("MainWindow", u"Employees", None))
         self.main_window_tab.setTabText(self.main_window_tab.indexOf(self.employees_tab), QCoreApplication.translate("MainWindow", u"Employees", None))
         self.main_window_tab.setTabText(self.main_window_tab.indexOf(self.tickets_tab), QCoreApplication.translate("MainWindow", u"Tickets", None))
         self.menucar.setTitle(QCoreApplication.translate("MainWindow", u"Save", None))
