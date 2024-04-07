@@ -22,9 +22,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             item.setData(Qt.UserRole, employee[0])
             self.ui.employees_list.addItem(item)
         self.clear_employee_screen()
+
+        for ticket in self.c.execute('''SELECT ticket_id, car_brand, car_registration_id, employee_id FROM tickets
+                                        WHERE ticket_status='created' OR ticket_status='in progress'
+                                     '''):
+            item = QListWidgetItem(ticket[1] + ' ' + ticket[2] + ': ' + (ticket[3] if ticket[3] else 'unassigned'))
+            item.setData(Qt.UserRole, ticket[0])
+            self.ui.unfinished_tickets_list.addItem(item)
+
+        for ticket in self.c.execute('''SELECT ticket_id, car_brand, car_registration_id, employee_id FROM tickets
+                                        WHERE ticket_status='closed' OR ticket_status='done'
+                                     '''):
+            item = QListWidgetItem(ticket[1] + ' ' + ticket[2] + ': ' + (ticket[3] if ticket[3] else 'unassigned'))
+            item.setData(Qt.UserRole, ticket[0])
+            self.ui.finished_tickets_list.addItem(item)
         
         self.ui.employees_list.itemClicked.connect(self.on_employee_selected)
         self.ui.add_employee_button.clicked.connect(self.add_employee)
+        self.ui.finished_tickets_list.itemClicked.connect(self.on_finished_ticket_selected)
+        self.ui.unfinished_tickets_list.itemClicked.connect(self.on_unfinished_ticket_selected)
+        
 
     def on_employee_selected(self):
         # Get the selected employee's id, name, surname and salary
@@ -44,6 +61,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Connect the remove_employee method to the remove_employee_button
         self.ui.remove_employee_button.clicked.connect(self.remove_employee)
+
 
     def remove_employee(self):
         curr_item = self.ui.employees_list.currentItem()
@@ -109,6 +127,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.ui.employees_list.currentItem() and self.ui.employees_list.currentItem().data(Qt.UserRole) == int(employee_id):
             self.clear_employee_screen()
             self.ui.employees_list.setCurrentItem(None)
+
+
+    def on_finished_ticket_selected(self):
+        ticket_id = self.ui.finished_tickets_list.currentItem().data(Qt.UserRole)
+        car_brand, car_model, car_registration_id, ticket_description, employee_id = self.c.execute('''SELECT car_brand, car_model, 
+                                                                                             car_registration_id, ticket_description, employee_id 
+                                                                                             FROM tickets WHERE ticket_id=?''', (ticket_id,)).fetchone()
+        self.ui.car_brand_edit.setText(car_brand)
+        self.ui.car_brand_edit.setEnabled(False)
+        self.ui.car_model_edit.setText(car_model)
+        self.ui.car_model_edit.setEnabled(False)
+        self.ui.registration_number_edit.setText(car_registration_id)
+        self.ui.registration_number_edit.setEnabled(False)
+        self.ui.description_text_edit.setText(ticket_description)
+        self.ui.description_text_edit.setEnabled(True)
+    
+    def on_unfinished_ticket_selected(self):
+        ticket_id = self.ui.unfinished_tickets_list.currentItem().data(Qt.UserRole)
 
 
 if __name__ == "__main__":
