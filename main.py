@@ -28,19 +28,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                      '''):
             item = QListWidgetItem(ticket[1] + ' ' + ticket[2] + ': ' + (ticket[3] if ticket[3] else 'unassigned'))
             item.setData(Qt.UserRole, ticket[0])
-            self.ui.unfinished_tickets_list.addItem(item)
+            self.ui.tickets_list.addItem(item)
 
         for ticket in self.c.execute('''SELECT ticket_id, car_brand, car_registration_id, employee_id FROM tickets
                                         WHERE ticket_status='closed' OR ticket_status='done'
                                      '''):
             item = QListWidgetItem(ticket[1] + ' ' + ticket[2] + ': ' + (ticket[3] if ticket[3] else 'unassigned'))
             item.setData(Qt.UserRole, ticket[0])
-            self.ui.finished_tickets_list.addItem(item)
+            self.ui.tickets_list.addItem(item)
         
         self.ui.employees_list.itemClicked.connect(self.on_employee_selected)
         self.ui.add_employee_button.clicked.connect(self.add_employee)
-        self.ui.finished_tickets_list.itemClicked.connect(self.on_finished_ticket_selected)
-        self.ui.unfinished_tickets_list.itemClicked.connect(self.on_unfinished_ticket_selected)
+        self.ui.tickets_list.itemClicked.connect(self.on_ticket_selected)
         
 
     def on_employee_selected(self):
@@ -129,10 +128,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.ui.employees_list.setCurrentItem(None)
 
 
-    def on_finished_ticket_selected(self):
-        ticket_id = self.ui.finished_tickets_list.currentItem().data(Qt.UserRole)
-        car_brand, car_model, car_registration_id, ticket_description, employee_id = self.c.execute('''SELECT car_brand, car_model, 
-                                                                                             car_registration_id, ticket_description, employee_id 
+    def set_ticket_on_screen(self, ticket_id):
+        car_brand, car_model, car_registration_id, ticket_description, employee_id, ticket_status = self.c.execute('''SELECT car_brand, car_model, 
+                                                                                             car_registration_id, ticket_description, employee_id, ticket_status 
                                                                                              FROM tickets WHERE ticket_id=?''', (ticket_id,)).fetchone()
         self.ui.car_brand_edit.setText(car_brand)
         self.ui.car_brand_edit.setEnabled(False)
@@ -142,9 +140,45 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui.registration_number_edit.setEnabled(False)
         self.ui.description_text_edit.setText(ticket_description)
         self.ui.description_text_edit.setEnabled(True)
+        self.ui.ticket_status_combo_box.setCurrentText(ticket_status)
+        self.ui.ticket_status_combo_box.setEnabled(True)
     
-    def on_unfinished_ticket_selected(self):
-        ticket_id = self.ui.unfinished_tickets_list.currentItem().data(Qt.UserRole)
+
+    def on_ticket_selected(self):
+        self.ui.save_button.hide()
+        ticket_id = self.ui.tickets_list.currentItem().data(Qt.UserRole)
+        self.set_ticket_on_screen(ticket_id)
+
+        self.ui.description_text_edit.textChanged.connect(self.description_change)
+        self.ui.ticket_status_combo_box.currentTextChanged.connect(self.ticket_status_change)
+
+    
+    def description_change(self):
+        self.ui.save_button.show()
+        self.ui.save_button.clicked.connect(self.save_description)
+
+
+    def ticket_status_change(self):
+        self.ui.save_button.show()
+        self.ui.save_button.clicked.connect(self.save_status)
+
+    def save_status(self):
+        ticket_id = self.ui.tickets_list.currentItem().data(Qt.UserRole)
+        status = self.ui.ticket_status_combo_box.currentText()
+        self.c.execute('''UPDATE tickets SET ticket_status=? WHERE ticket_id=?''', (status, ticket_id))
+        
+        self.conn.commit()
+        self.ui.save_button.hide()
+
+    
+    def save_description(self):
+        ticket_id = self.ui.tickets_list.currentItem().data(Qt.UserRole)
+        description = self.ui.description_text_edit.toPlainText()
+        self.c.execute('''UPDATE tickets SET ticket_description=? WHERE ticket_id=?''', (description, ticket_id))
+        
+        self.conn.commit()
+        #self.ui.description_text_edit.textChanged.disconnect(self.description_change)
+        self.ui.save_button.hide()
 
 
 if __name__ == "__main__":

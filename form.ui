@@ -171,40 +171,22 @@
                <widget class="QWidget" name="">
                 <property name="geometry">
                  <rect>
-                  <x>60</x>
-                  <y>20</y>
-                  <width>260</width>
-                  <height>442</height>
+                  <x>61</x>
+                  <y>21</y>
+                  <width>258</width>
+                  <height>461</height>
                  </rect>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_12">
+                <layout class="QVBoxLayout" name="verticalLayout_10">
                  <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_10">
-                   <item>
-                    <widget class="QLabel" name="unfinished_tickets_label">
-                     <property name="text">
-                      <string>Unfinished Tickets</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QListWidget" name="unfinished_tickets_list"/>
-                   </item>
-                  </layout>
+                  <widget class="QLabel" name="tickets_label">
+                   <property name="text">
+                    <string>Tickets</string>
+                   </property>
+                  </widget>
                  </item>
                  <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_11">
-                   <item>
-                    <widget class="QLabel" name="finished_tickets_label">
-                     <property name="text">
-                      <string>Finished Tickets</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QListWidget" name="finished_tickets_list"/>
-                   </item>
-                  </layout>
+                  <widget class="QListWidget" name="tickets_list"/>
                  </item>
                 </layout>
                </widget>
@@ -224,13 +206,38 @@
             <layout class="QVBoxLayout" name="verticalLayout_9">
              <item>
               <widget class="QWidget" name="ticket_info_widget" native="true">
-               <widget class="QWidget" name="">
+               <widget class="QPushButton" name="save_button">
                 <property name="geometry">
                  <rect>
-                  <x>10</x>
-                  <y>30</y>
-                  <width>347</width>
-                  <height>293</height>
+                  <x>150</x>
+                  <y>430</y>
+                  <width>88</width>
+                  <height>25</height>
+                 </rect>
+                </property>
+                <property name="whatsThis">
+                 <string notr="true"/>
+                </property>
+                <property name="text">
+                 <string>Save</string>
+                </property>
+                <property name="autoDefault">
+                 <bool>false</bool>
+                </property>
+                <property name="default">
+                 <bool>false</bool>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+               <widget class="QWidget" name="layoutWidget">
+                <property name="geometry">
+                 <rect>
+                  <x>1</x>
+                  <y>1</y>
+                  <width>411</width>
+                  <height>421</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_15">
@@ -287,6 +294,74 @@
                    </item>
                    <item>
                     <widget class="QTextEdit" name="description_text_edit"/>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_5">
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_16">
+                     <item>
+                      <widget class="QLabel" name="ticket_status_label">
+                       <property name="text">
+                        <string>Ticket status:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="start_of_work_label">
+                       <property name="text">
+                        <string>Start of work:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="assigned_employee_label">
+                       <property name="text">
+                        <string>Assigned employee: </string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_17">
+                     <item>
+                      <widget class="QComboBox" name="ticket_status_combo_box">
+                       <item>
+                        <property name="text">
+                         <string>None</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>created</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>in progress</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>done</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>closed</string>
+                        </property>
+                       </item>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QDateTimeEdit" name="start_of_work_date_edit"/>
+                     </item>
+                     <item>
+                      <widget class="QComboBox" name="assign_employee_combo_box"/>
+                     </item>
+                    </layout>
                    </item>
                   </layout>
                  </item>
