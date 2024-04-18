@@ -298,7 +298,7 @@
                       <item>
                        <widget class="QLabel" name="assigned_employee_label">
                         <property name="text">
-                         <string>Assigned employee: </string>
+                         <string>Assigned employee id: </string>
                         </property>
                        </widget>
                       </item>
@@ -342,7 +342,7 @@
                        <widget class="QDateTimeEdit" name="end_of_work_date_edit"/>
                       </item>
                       <item>
-                       <widget class="QComboBox" name="assign_employee_combo_box"/>
+                       <widget class="QLineEdit" name="assigned_employee_id_edit"/>
                       </item>
                      </layout>
                     </item>

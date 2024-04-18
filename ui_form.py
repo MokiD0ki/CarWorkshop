@@ -327,10 +327,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_12.addWidget(self.end_of_work_date_edit)
 
-        self.assign_employee_combo_box = QComboBox(self.ticket_info_widget)
-        self.assign_employee_combo_box.setObjectName(u"assign_employee_combo_box")
+        self.assigned_employee_id_edit = QLineEdit(self.ticket_info_widget)
+        self.assigned_employee_id_edit.setObjectName(u"assigned_employee_id_edit")
 
-        self.verticalLayout_12.addWidget(self.assign_employee_combo_box)
+        self.verticalLayout_12.addWidget(self.assigned_employee_id_edit)
 
 
         self.horizontalLayout_5.addLayout(self.verticalLayout_12)
@@ -407,7 +407,7 @@ class Ui_MainWindow(object):
         self.ticket_status_label.setText(QCoreApplication.translate("MainWindow", u"Ticket status:", None))
         self.start_of_work_label.setText(QCoreApplication.translate("MainWindow", u"Start of work:", None))
         self.end_of_work_label.setText(QCoreApplication.translate("MainWindow", u"End of work: ", None))
-        self.assigned_employee_label.setText(QCoreApplication.translate("MainWindow", u"Assigned employee: ", None))
+        self.assigned_employee_label.setText(QCoreApplication.translate("MainWindow", u"Assigned employee id: ", None))
         self.ticket_status_combo_box.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
         self.ticket_status_combo_box.setItemText(1, QCoreApplication.translate("MainWindow", u"created", None))
         self.ticket_status_combo_box.setItemText(2, QCoreApplication.translate("MainWindow", u"in progress", None))

@@ -12,6 +12,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
+        self.setWindowTitle('Car Workshop')
         
         self.ui.setupUi(self)
         self.conn = sqlite3.connect('employees.db')
@@ -41,7 +42,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui.add_employee_button.clicked.connect(self.add_employee)
         self.ui.tickets_list.itemClicked.connect(self.on_ticket_selected)
         self.ui.add_ticket_button.clicked.connect(self.add_ticket)
-        
+    
+
+    def employee_name_get(self, employee_id):
+        return self.c.execute('''SELECT name, surname FROM employees WHERE employee_id=?''', (employee_id,)).fetchone().join(' ')
+
 
     def on_employee_selected(self):
         # Get the selected employee's id, name, surname and salary
@@ -144,12 +149,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui.description_text_edit.setEnabled(True)
         self.ui.ticket_status_combo_box.setCurrentText(ticket_status)
         self.ui.ticket_status_combo_box.setEnabled(True)
-
         self.ui.start_of_work_date_edit.setDateTime(self.date_time_converter(time_slot))
         self.ui.end_of_work_date_edit.setDateTime(self.date_time_converter(time_slot_end))
         
-        if not employee_id: 
-            self.ui.assign_employee_combo_box.setCurrentText('Unassigned')
+        if employee_id: 
+            self.ui.assigned_employee_id_edit.setText(str(employee_id))
+        else:
+            self.ui.assigned_employee_id_edit.setText('Unassigned')
 
             
     def time_converter(self, time_slot):
@@ -171,7 +177,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui.ticket_status_combo_box.currentTextChanged.connect(self.ticket_status_change)
         self.ui.start_of_work_date_edit.dateTimeChanged.connect(self.start_of_work_date_change)
         self.ui.end_of_work_date_edit.dateTimeChanged.connect(self.end_of_work_time_change)
-        #self.ui.assign_employee_combo_box.currentTextChanged.connect(self.assign_employee)
+        self.ui.assigned_employee_id_edit.textChanged.connect(self.assign_employee_id_change)
+
+
+    def assign_employee_id_change(self):
+        self.ui.save_button.show()
+        self.ui.save_button.clicked.connect(self.save_employee_id)
 
     
     def start_of_work_date_change(self):
@@ -193,6 +204,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui.save_button.show()
         self.ui.save_button.clicked.connect(self.save_status)
 
+
+    def save_employee_id(self):
+        ticket_id = self.ui.tickets_list.currentItem()
+        if ticket_id is None:
+            return
+        
+        ticket_id = ticket_id.data(Qt.UserRole)
+        employee_id = self.ui.assigned_employee_id_edit.text().strip()
+        if self.employee_exists(employee_id) is False:
+            print(f"Employee with id {employee_id} does not exist")
+            self.ui.save_button.hide()
+            return
+        
+        self.c.execute('''UPDATE tickets SET employee_id=? WHERE ticket_id=?''', (employee_id, ticket_id))
+        self.conn.commit()
+        self.ui.save_button.hide()
+
+        self.ui.tickets_list.currentItem().setText(self.ui.car_brand_edit.text() + ' ' + self.ui.registration_number_edit.text() + ': ' + employee_id)
+        self.ui.tickets_list.setCurrentItem(None)
+
+
+    def employee_exists(self, employee_id):
+        return self.c.execute('''SELECT employee_id FROM employees WHERE employee_id=?''', (employee_id,)).fetchone() is not None
 
     def save_start_of_work_date(self):
         ticket_id = self.ui.tickets_list.currentItem()
@@ -280,8 +314,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui.description_text_edit.setEnabled(True)
         self.ui.ticket_status_combo_box.setCurrentText('created')
         self.ui.ticket_status_combo_box.setEnabled(True)
-        self.ui.assign_employee_combo_box.setCurrentText('Unassigned')
-        self.ui.assign_employee_combo_box.setEnabled(True)
+        self.ui.assigned_employee_id_edit.setText('Unassigned')
+        self.ui.assigned_employee_id_edit.setEnabled(True)
         self.ui.start_of_work_date_edit.setDateTime(QDateTime.currentDateTime())
         self.ui.start_of_work_date_edit.setEnabled(True)
         self.ui.save_button.show()
@@ -293,9 +327,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         car_registration_id = self.ui.registration_number_edit.text().strip().upper()
         description = self.ui.description_text_edit.toPlainText()
         status = self.ui.ticket_status_combo_box.currentText()
-        #employee_id = self.ui.assign_employee_combo_box.currentData(Qt.UserRole)
-        
-        employee_id = -1
+
+        employee_id = self.ui.assigned_employee_id_edit.text().strip()
 
         time_slot = self.ui.start_of_work_date_edit.dateTime().toString('dd-MM-yyyy-hh:mm')
         time_slot_end = self.ui.end_of_work_date_edit.dateTime().toString('dd-MM-yyyy-hh:mm')
@@ -306,10 +339,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
         
         if car_brand != '' and car_model != '' and car_registration_id != '' and description != '' and time_slot != '' and time_slot_end != '':
-            self.c.execute('''INSERT INTO tickets VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, NULL)''', (status, car_brand, car_model, car_registration_id, description, time_slot, time_slot_end))
+            self.c.execute('''INSERT INTO tickets VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?)''', (status, car_brand, car_model, car_registration_id, 
+                                                                                            description, time_slot, time_slot_end, 
+                                                                                            (employee_id if self.employee_exists(employee_id) else None)))
             self.conn.commit()
 
-            item = QListWidgetItem(car_brand + ' ' + car_registration_id + ': ' + (str(employee_id) if employee_id else 'unassigned'))
+            item = QListWidgetItem(car_brand + ' ' + car_registration_id + ': ' + (str(employee_id) if self.employee_exists(employee_id) else 'unassigned'))
             item.setData(Qt.UserRole, self.c.lastrowid)
             self.ui.tickets_list.addItem(item)
 
