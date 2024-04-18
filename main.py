@@ -1,6 +1,6 @@
 import sys, sqlite3
 from PySide6.QtWidgets import QApplication, QMainWindow, QListWidgetItem
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QDateTime, QTime, QDate
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -26,20 +26,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for ticket in self.c.execute('''SELECT ticket_id, car_brand, car_registration_id, employee_id FROM tickets
                                         WHERE ticket_status='created' OR ticket_status='in progress'
                                      '''):
-            item = QListWidgetItem(ticket[1] + ' ' + ticket[2] + ': ' + (ticket[3] if ticket[3] else 'unassigned'))
+            item = QListWidgetItem(ticket[1] + ' ' + ticket[2] + ': ' + (str(ticket[3]) if ticket[3] else 'unassigned'))
             item.setData(Qt.UserRole, ticket[0])
             self.ui.tickets_list.addItem(item)
 
         for ticket in self.c.execute('''SELECT ticket_id, car_brand, car_registration_id, employee_id FROM tickets
                                         WHERE ticket_status='closed' OR ticket_status='done'
                                      '''):
-            item = QListWidgetItem(ticket[1] + ' ' + ticket[2] + ': ' + (ticket[3] if ticket[3] else 'unassigned'))
+            item = QListWidgetItem(ticket[1] + ' ' + ticket[2] + ': ' + (str(ticket[3]) if ticket[3] else 'unassigned'))
             item.setData(Qt.UserRole, ticket[0])
             self.ui.tickets_list.addItem(item)
         
         self.ui.employees_list.itemClicked.connect(self.on_employee_selected)
         self.ui.add_employee_button.clicked.connect(self.add_employee)
         self.ui.tickets_list.itemClicked.connect(self.on_ticket_selected)
+        self.ui.add_ticket_button.clicked.connect(self.add_ticket)
         
 
     def on_employee_selected(self):
@@ -129,9 +130,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def set_ticket_on_screen(self, ticket_id):
-        car_brand, car_model, car_registration_id, ticket_description, employee_id, ticket_status = self.c.execute('''SELECT car_brand, car_model, 
-                                                                                             car_registration_id, ticket_description, employee_id, ticket_status 
-                                                                                             FROM tickets WHERE ticket_id=?''', (ticket_id,)).fetchone()
+        car_brand, car_model, car_registration_id, ticket_description, employee_id, ticket_status, time_slot, time_slot_end = self.c.execute('''SELECT car_brand, car_model, 
+                                                                                                            car_registration_id, ticket_description, 
+                                                                                                            employee_id, ticket_status, time_slot, time_slot_end 
+                                                                                                            FROM tickets WHERE ticket_id=?''', (ticket_id,)).fetchone()
         self.ui.car_brand_edit.setText(car_brand)
         self.ui.car_brand_edit.setEnabled(False)
         self.ui.car_model_edit.setText(car_model)
@@ -142,7 +144,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui.description_text_edit.setEnabled(True)
         self.ui.ticket_status_combo_box.setCurrentText(ticket_status)
         self.ui.ticket_status_combo_box.setEnabled(True)
+
+        self.ui.start_of_work_date_edit.setDateTime(self.date_time_converter(time_slot))
+        self.ui.end_of_work_date_edit.setDateTime(self.date_time_converter(time_slot_end))
+        
+        if not employee_id: 
+            self.ui.assign_employee_combo_box.setCurrentText('Unassigned')
+
+            
+    def time_converter(self, time_slot):
+        hour, minute = time_slot.split('-')[-1].split(':')
+        return QTime(int(hour), int(minute))
     
+
+    def date_time_converter(self, time_slot):
+        date, month, year, hour_minute = time_slot.split('-')
+        return QDateTime(QDate(int(year), int(month), int(date)), self.time_converter(hour_minute))
+
 
     def on_ticket_selected(self):
         self.ui.save_button.hide()
@@ -151,6 +169,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.ui.description_text_edit.textChanged.connect(self.description_change)
         self.ui.ticket_status_combo_box.currentTextChanged.connect(self.ticket_status_change)
+        self.ui.start_of_work_date_edit.dateTimeChanged.connect(self.start_of_work_date_change)
+        self.ui.end_of_work_date_edit.dateTimeChanged.connect(self.end_of_work_time_change)
+        #self.ui.assign_employee_combo_box.currentTextChanged.connect(self.assign_employee)
+
+    
+    def start_of_work_date_change(self):
+        self.ui.save_button.show()
+        self.ui.save_button.clicked.connect(self.save_start_of_work_date)
+    
+
+    def end_of_work_time_change(self):
+        self.ui.save_button.show()
+        self.ui.save_button.clicked.connect(self.save_end_of_work_date)
 
     
     def description_change(self):
@@ -162,23 +193,131 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui.save_button.show()
         self.ui.save_button.clicked.connect(self.save_status)
 
-    def save_status(self):
-        ticket_id = self.ui.tickets_list.currentItem().data(Qt.UserRole)
-        status = self.ui.ticket_status_combo_box.currentText()
-        self.c.execute('''UPDATE tickets SET ticket_status=? WHERE ticket_id=?''', (status, ticket_id))
+
+    def save_start_of_work_date(self):
+        ticket_id = self.ui.tickets_list.currentItem()
+        if ticket_id is not None:
+            ticket_id = ticket_id.data(Qt.UserRole)
+            time_slot = self.ui.start_of_work_date_edit.dateTime().toString('dd-MM-yyyy-hh:mm')
+            self.c.execute('''UPDATE tickets SET time_slot=? WHERE ticket_id=?''', (time_slot, ticket_id))
         
-        self.conn.commit()
-        self.ui.save_button.hide()
+            self.conn.commit()
+            self.ui.save_button.hide()
+
+
+    def save_end_of_work_date(self):
+        ticket_id = self.ui.tickets_list.currentItem()
+        if ticket_id is not None:
+            ticket_id = ticket_id.data(Qt.UserRole)
+            time_slot_end = self.ui.end_of_work_date_edit.dateTime().toString('dd-MM-yyyy-hh:mm')
+            if self.date_time_compare(self.ui.start_of_work_date_edit.dateTime().toString('dd-MM-yyyy-hh:mm'), time_slot_end) is False:
+                print("End time must be greater than start time")
+                self.ui.save_button.hide()
+                return
+            self.c.execute('''UPDATE tickets SET time_slot_end=? WHERE ticket_id=?''', (time_slot_end, ticket_id))
+        
+            self.conn.commit()
+            self.ui.save_button.hide()
+
+
+    def date_time_compare(self, start_time, end_time):
+        start_time = start_time.split('-')
+        end_time = end_time.split('-')
+        start_date = start_time[:3]
+        start_time = start_time[3]
+        end_date = end_time[:3]
+        end_time = end_time[3]
+
+        if start_date == end_date:
+            if start_time < end_time:
+                return True
+            else:
+                return False
+        elif start_date < end_date:
+            return True
+        else:
+            return False
+
+
+    def save_status(self):
+        ticket_id = self.ui.tickets_list.currentItem()
+        if ticket_id is not None:
+            ticket_id = ticket_id.data(Qt.UserRole)
+            status = self.ui.ticket_status_combo_box.currentText()
+            self.c.execute('''UPDATE tickets SET ticket_status=? WHERE ticket_id=?''', (status, ticket_id))
+        
+            self.conn.commit()
+            self.ui.save_button.hide()
 
     
     def save_description(self):
-        ticket_id = self.ui.tickets_list.currentItem().data(Qt.UserRole)
+        current_item = self.ui.tickets_list.currentItem()
+        if current_item is not None:
+            ticket_id = current_item.data(Qt.UserRole)
+            description = self.ui.description_text_edit.toPlainText()
+            self.c.execute('''UPDATE tickets SET ticket_description=? WHERE ticket_id=?''', (description, ticket_id))
+            
+            self.conn.commit()
+            self.ui.save_button.hide()
+        # else:
+        #     print("No item selected")
+
+
+    def add_ticket(self):
+        self.clear_ticket_screen()
+        self.ui.tickets_list.setCurrentItem(None)
+        self.ui.save_button.clicked.connect(self.save_ticket)
+
+
+    def clear_ticket_screen(self):
+        self.ui.car_brand_edit.clear()
+        self.ui.car_brand_edit.setEnabled(True)
+        self.ui.car_model_edit.clear()
+        self.ui.car_model_edit.setEnabled(True)
+        self.ui.registration_number_edit.clear()
+        self.ui.registration_number_edit.setEnabled(True)
+        self.ui.description_text_edit.clear()
+        self.ui.description_text_edit.setEnabled(True)
+        self.ui.ticket_status_combo_box.setCurrentText('created')
+        self.ui.ticket_status_combo_box.setEnabled(True)
+        self.ui.assign_employee_combo_box.setCurrentText('Unassigned')
+        self.ui.assign_employee_combo_box.setEnabled(True)
+        self.ui.start_of_work_date_edit.setDateTime(QDateTime.currentDateTime())
+        self.ui.start_of_work_date_edit.setEnabled(True)
+        self.ui.save_button.show()
+
+
+    def save_ticket(self):
+        car_brand = self.ui.car_brand_edit.text().strip().capitalize()
+        car_model = self.ui.car_model_edit.text().strip().capitalize()
+        car_registration_id = self.ui.registration_number_edit.text().strip().upper()
         description = self.ui.description_text_edit.toPlainText()
-        self.c.execute('''UPDATE tickets SET ticket_description=? WHERE ticket_id=?''', (description, ticket_id))
+        status = self.ui.ticket_status_combo_box.currentText()
+        #employee_id = self.ui.assign_employee_combo_box.currentData(Qt.UserRole)
         
-        self.conn.commit()
-        #self.ui.description_text_edit.textChanged.disconnect(self.description_change)
+        employee_id = -1
+
+        time_slot = self.ui.start_of_work_date_edit.dateTime().toString('dd-MM-yyyy-hh:mm')
+        time_slot_end = self.ui.end_of_work_date_edit.dateTime().toString('dd-MM-yyyy-hh:mm')
+
+        if self.date_time_compare(time_slot, time_slot_end) is False:
+            print("End time must be greater than start time")
+            self.ui.save_button.hide()
+            return
+        
+        if car_brand != '' and car_model != '' and car_registration_id != '' and description != '' and time_slot != '' and time_slot_end != '':
+            self.c.execute('''INSERT INTO tickets VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, NULL)''', (status, car_brand, car_model, car_registration_id, description, time_slot, time_slot_end))
+            self.conn.commit()
+
+            item = QListWidgetItem(car_brand + ' ' + car_registration_id + ': ' + (str(employee_id) if employee_id else 'unassigned'))
+            item.setData(Qt.UserRole, self.c.lastrowid)
+            self.ui.tickets_list.addItem(item)
+
+            self.clear_ticket_screen()
+
+        self.ui.tickets_list.setCurrentItem(None)
         self.ui.save_button.hide()
+        self.ui.save_button.clicked.disconnect(self.save_ticket)
 
 
 if __name__ == "__main__":

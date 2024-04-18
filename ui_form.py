@@ -28,6 +28,8 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(919, 631)
+        self.action_save_pdf = QAction(MainWindow)
+        self.action_save_pdf.setObjectName(u"action_save_pdf")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -171,21 +173,32 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.ticket_list_widget = QWidget(self.ticket_list_frame)
         self.ticket_list_widget.setObjectName(u"ticket_list_widget")
-        self.widget = QWidget(self.ticket_list_widget)
-        self.widget.setObjectName(u"widget")
-        self.widget.setGeometry(QRect(61, 21, 258, 461))
-        self.verticalLayout_10 = QVBoxLayout(self.widget)
+        self.gridLayout_5 = QGridLayout(self.ticket_list_widget)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.verticalLayout_16 = QVBoxLayout()
+        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.verticalLayout_10 = QVBoxLayout()
         self.verticalLayout_10.setObjectName(u"verticalLayout_10")
-        self.verticalLayout_10.setContentsMargins(0, 0, 0, 0)
-        self.tickets_label = QLabel(self.widget)
+        self.tickets_label = QLabel(self.ticket_list_widget)
         self.tickets_label.setObjectName(u"tickets_label")
 
         self.verticalLayout_10.addWidget(self.tickets_label)
 
-        self.tickets_list = QListWidget(self.widget)
+        self.tickets_list = QListWidget(self.ticket_list_widget)
         self.tickets_list.setObjectName(u"tickets_list")
 
         self.verticalLayout_10.addWidget(self.tickets_list)
+
+
+        self.verticalLayout_16.addLayout(self.verticalLayout_10)
+
+        self.add_ticket_button = QPushButton(self.ticket_list_widget)
+        self.add_ticket_button.setObjectName(u"add_ticket_button")
+
+        self.verticalLayout_16.addWidget(self.add_ticket_button)
+
+
+        self.gridLayout_5.addLayout(self.verticalLayout_16, 0, 0, 1, 1)
 
 
         self.verticalLayout_8.addWidget(self.ticket_list_widget)
@@ -201,35 +214,25 @@ class Ui_MainWindow(object):
         self.verticalLayout_9.setObjectName(u"verticalLayout_9")
         self.ticket_info_widget = QWidget(self.ticket_info_frame)
         self.ticket_info_widget.setObjectName(u"ticket_info_widget")
-        self.save_button = QPushButton(self.ticket_info_widget)
-        self.save_button.setObjectName(u"save_button")
-        self.save_button.setGeometry(QRect(150, 430, 88, 25))
-#if QT_CONFIG(whatsthis)
-        self.save_button.setWhatsThis(u"")
-#endif // QT_CONFIG(whatsthis)
-        self.save_button.setAutoDefault(False)
-        self.save_button.setFlat(False)
-        self.layoutWidget = QWidget(self.ticket_info_widget)
-        self.layoutWidget.setObjectName(u"layoutWidget")
-        self.layoutWidget.setGeometry(QRect(1, 1, 411, 421))
-        self.verticalLayout_15 = QVBoxLayout(self.layoutWidget)
+        self.gridLayout_4 = QGridLayout(self.ticket_info_widget)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.verticalLayout_15 = QVBoxLayout()
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
-        self.verticalLayout_15.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.verticalLayout_13 = QVBoxLayout()
         self.verticalLayout_13.setObjectName(u"verticalLayout_13")
-        self.car_brand_label = QLabel(self.layoutWidget)
+        self.car_brand_label = QLabel(self.ticket_info_widget)
         self.car_brand_label.setObjectName(u"car_brand_label")
 
         self.verticalLayout_13.addWidget(self.car_brand_label)
 
-        self.car_model_label = QLabel(self.layoutWidget)
+        self.car_model_label = QLabel(self.ticket_info_widget)
         self.car_model_label.setObjectName(u"car_model_label")
 
         self.verticalLayout_13.addWidget(self.car_model_label)
 
-        self.registration_number_label = QLabel(self.layoutWidget)
+        self.registration_number_label = QLabel(self.ticket_info_widget)
         self.registration_number_label.setObjectName(u"registration_number_label")
 
         self.verticalLayout_13.addWidget(self.registration_number_label)
@@ -239,17 +242,17 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_14 = QVBoxLayout()
         self.verticalLayout_14.setObjectName(u"verticalLayout_14")
-        self.car_brand_edit = QLineEdit(self.layoutWidget)
+        self.car_brand_edit = QLineEdit(self.ticket_info_widget)
         self.car_brand_edit.setObjectName(u"car_brand_edit")
 
         self.verticalLayout_14.addWidget(self.car_brand_edit)
 
-        self.car_model_edit = QLineEdit(self.layoutWidget)
+        self.car_model_edit = QLineEdit(self.ticket_info_widget)
         self.car_model_edit.setObjectName(u"car_model_edit")
 
         self.verticalLayout_14.addWidget(self.car_model_edit)
 
-        self.registration_number_edit = QLineEdit(self.layoutWidget)
+        self.registration_number_edit = QLineEdit(self.ticket_info_widget)
         self.registration_number_edit.setObjectName(u"registration_number_edit")
 
         self.verticalLayout_14.addWidget(self.registration_number_edit)
@@ -262,12 +265,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.desctiption_label = QLabel(self.layoutWidget)
+        self.desctiption_label = QLabel(self.ticket_info_widget)
         self.desctiption_label.setObjectName(u"desctiption_label")
 
         self.horizontalLayout_4.addWidget(self.desctiption_label)
 
-        self.description_text_edit = QTextEdit(self.layoutWidget)
+        self.description_text_edit = QTextEdit(self.ticket_info_widget)
         self.description_text_edit.setObjectName(u"description_text_edit")
 
         self.horizontalLayout_4.addWidget(self.description_text_edit)
@@ -277,29 +280,34 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_5 = QHBoxLayout()
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.verticalLayout_16 = QVBoxLayout()
-        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
-        self.ticket_status_label = QLabel(self.layoutWidget)
+        self.verticalLayout_11 = QVBoxLayout()
+        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.ticket_status_label = QLabel(self.ticket_info_widget)
         self.ticket_status_label.setObjectName(u"ticket_status_label")
 
-        self.verticalLayout_16.addWidget(self.ticket_status_label)
+        self.verticalLayout_11.addWidget(self.ticket_status_label)
 
-        self.start_of_work_label = QLabel(self.layoutWidget)
+        self.start_of_work_label = QLabel(self.ticket_info_widget)
         self.start_of_work_label.setObjectName(u"start_of_work_label")
 
-        self.verticalLayout_16.addWidget(self.start_of_work_label)
+        self.verticalLayout_11.addWidget(self.start_of_work_label)
 
-        self.assigned_employee_label = QLabel(self.layoutWidget)
+        self.end_of_work_label = QLabel(self.ticket_info_widget)
+        self.end_of_work_label.setObjectName(u"end_of_work_label")
+
+        self.verticalLayout_11.addWidget(self.end_of_work_label)
+
+        self.assigned_employee_label = QLabel(self.ticket_info_widget)
         self.assigned_employee_label.setObjectName(u"assigned_employee_label")
 
-        self.verticalLayout_16.addWidget(self.assigned_employee_label)
+        self.verticalLayout_11.addWidget(self.assigned_employee_label)
 
 
-        self.horizontalLayout_5.addLayout(self.verticalLayout_16)
+        self.horizontalLayout_5.addLayout(self.verticalLayout_11)
 
-        self.verticalLayout_17 = QVBoxLayout()
-        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
-        self.ticket_status_combo_box = QComboBox(self.layoutWidget)
+        self.verticalLayout_12 = QVBoxLayout()
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.ticket_status_combo_box = QComboBox(self.ticket_info_widget)
         self.ticket_status_combo_box.addItem("")
         self.ticket_status_combo_box.addItem("")
         self.ticket_status_combo_box.addItem("")
@@ -307,23 +315,41 @@ class Ui_MainWindow(object):
         self.ticket_status_combo_box.addItem("")
         self.ticket_status_combo_box.setObjectName(u"ticket_status_combo_box")
 
-        self.verticalLayout_17.addWidget(self.ticket_status_combo_box)
+        self.verticalLayout_12.addWidget(self.ticket_status_combo_box)
 
-        self.start_of_work_date_edit = QDateTimeEdit(self.layoutWidget)
+        self.start_of_work_date_edit = QDateTimeEdit(self.ticket_info_widget)
         self.start_of_work_date_edit.setObjectName(u"start_of_work_date_edit")
 
-        self.verticalLayout_17.addWidget(self.start_of_work_date_edit)
+        self.verticalLayout_12.addWidget(self.start_of_work_date_edit)
 
-        self.assign_employee_combo_box = QComboBox(self.layoutWidget)
+        self.end_of_work_date_edit = QDateTimeEdit(self.ticket_info_widget)
+        self.end_of_work_date_edit.setObjectName(u"end_of_work_date_edit")
+
+        self.verticalLayout_12.addWidget(self.end_of_work_date_edit)
+
+        self.assign_employee_combo_box = QComboBox(self.ticket_info_widget)
         self.assign_employee_combo_box.setObjectName(u"assign_employee_combo_box")
 
-        self.verticalLayout_17.addWidget(self.assign_employee_combo_box)
+        self.verticalLayout_12.addWidget(self.assign_employee_combo_box)
 
 
-        self.horizontalLayout_5.addLayout(self.verticalLayout_17)
+        self.horizontalLayout_5.addLayout(self.verticalLayout_12)
 
 
         self.verticalLayout_15.addLayout(self.horizontalLayout_5)
+
+        self.save_button = QPushButton(self.ticket_info_widget)
+        self.save_button.setObjectName(u"save_button")
+#if QT_CONFIG(whatsthis)
+        self.save_button.setWhatsThis(u"")
+#endif // QT_CONFIG(whatsthis)
+        self.save_button.setAutoDefault(False)
+        self.save_button.setFlat(False)
+
+        self.verticalLayout_15.addWidget(self.save_button)
+
+
+        self.gridLayout_4.addLayout(self.verticalLayout_15, 0, 0, 1, 1)
 
 
         self.verticalLayout_9.addWidget(self.ticket_info_widget)
@@ -350,6 +376,7 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menubar)
 
         self.menubar.addAction(self.menucar.menuAction())
+        self.menucar.addAction(self.action_save_pdf)
 
         self.retranslateUi(MainWindow)
 
@@ -362,6 +389,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.action_save_pdf.setText(QCoreApplication.translate("MainWindow", u"Save PDF", None))
         self.employee_list_label.setText(QCoreApplication.translate("MainWindow", u"Employees", None))
         self.add_employee_button.setText(QCoreApplication.translate("MainWindow", u"Add Employee", None))
         self.remove_employee_button.setText(QCoreApplication.translate("MainWindow", u"Remove Employee", None))
@@ -371,13 +399,14 @@ class Ui_MainWindow(object):
         self.employe_id_label.setText(QCoreApplication.translate("MainWindow", u"Employee_id:", None))
         self.main_window_tab.setTabText(self.main_window_tab.indexOf(self.employees_tab), QCoreApplication.translate("MainWindow", u"Employees", None))
         self.tickets_label.setText(QCoreApplication.translate("MainWindow", u"Tickets", None))
-        self.save_button.setText(QCoreApplication.translate("MainWindow", u"Save", None))
+        self.add_ticket_button.setText(QCoreApplication.translate("MainWindow", u"Add Ticket", None))
         self.car_brand_label.setText(QCoreApplication.translate("MainWindow", u"Car brand:", None))
         self.car_model_label.setText(QCoreApplication.translate("MainWindow", u"Car model:", None))
         self.registration_number_label.setText(QCoreApplication.translate("MainWindow", u"Registration number:", None))
         self.desctiption_label.setText(QCoreApplication.translate("MainWindow", u"Description:", None))
         self.ticket_status_label.setText(QCoreApplication.translate("MainWindow", u"Ticket status:", None))
         self.start_of_work_label.setText(QCoreApplication.translate("MainWindow", u"Start of work:", None))
+        self.end_of_work_label.setText(QCoreApplication.translate("MainWindow", u"End of work: ", None))
         self.assigned_employee_label.setText(QCoreApplication.translate("MainWindow", u"Assigned employee: ", None))
         self.ticket_status_combo_box.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
         self.ticket_status_combo_box.setItemText(1, QCoreApplication.translate("MainWindow", u"created", None))
@@ -385,6 +414,7 @@ class Ui_MainWindow(object):
         self.ticket_status_combo_box.setItemText(3, QCoreApplication.translate("MainWindow", u"done", None))
         self.ticket_status_combo_box.setItemText(4, QCoreApplication.translate("MainWindow", u"closed", None))
 
+        self.save_button.setText(QCoreApplication.translate("MainWindow", u"Save", None))
         self.main_window_tab.setTabText(self.main_window_tab.indexOf(self.tickets_tab), QCoreApplication.translate("MainWindow", u"Tickets", None))
         self.menucar.setTitle(QCoreApplication.translate("MainWindow", u"Save", None))
     # retranslateUi

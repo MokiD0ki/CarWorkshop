@@ -23,6 +23,7 @@ c.execute('''
         car_registration_id TEXT,
         ticket_description TEXT,
         time_slot TEXT,
+        time_slot_end TEXT,
         employee_id INTEGER,
         FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
     )
@@ -58,14 +59,14 @@ c.execute('''
 ''')
 
 c.execute('''INSERT INTO tickets 
-    (ticket_id, ticket_status, car_brand, car_model, car_registration_id, ticket_description, time_slot, employee_id)
-    VALUES(NULL, 'created', 'Toyota', 'Corolla', 'ABC123', 'Engine failure', '31-04-2024-12:00-16:00', NULL),
-    (NULL, 'created', 'Toyota', 'Prius', 'KFC123', 'Engine failure', '30-04-2024-12:00-16:00', NULL),
-    (NULL, 'created', 'Lada', 'Gavno', 'BBB111', 'Engine failure', '29-04-2024-12:00-16:00', NULL),
-    (NULL, 'in progress', 'Mazda', 'Corolla', 'GFD777', 'Engine failure', '28-04-2024-12:00-16:00', NULL),
-    (NULL, 'in progress', 'Lalka', 'Corolla', 'GHS989', 'Engine failure', '27-04-2024-12:00-16:00', NULL),
-    (NULL, 'closed', 'Palka', 'Corolla', 'SSS000', 'Engine failure', '26-04-2024-12:00-16:00', NULL),
-    (NULL, 'closed', 'Dalka', 'Corolla', 'KRT323', 'Engine failure', '25-04-2024-12:00-16:00', NULL)
+    (ticket_id, ticket_status, car_brand, car_model, car_registration_id, ticket_description, time_slot, time_slot_end, employee_id)
+    VALUES(NULL, 'created', 'Toyota', 'Corolla', 'ABC123', 'Engine failure', '31-04-2024-12:00', '31-04-2024-16:00', NULL),
+    (NULL, 'created', 'Toyota', 'Prius', 'KFC123', 'Engine failure', '30-04-2024-12:00', '30-04-2024-16:00', NULL),
+    (NULL, 'created', 'Lada', 'Gavno', 'BBB111', 'Engine failure', '29-04-2024-12:00', '29-04-2024-16:00', NULL),
+    (NULL, 'in progress', 'Mazda', 'Corolla', 'GFD777', 'Engine failure', '28-04-2024-12:30', '28-04-2024-16:00', 1),
+    (NULL, 'in progress', 'Lalka', 'Corolla', 'GHS989', 'Engine failure', '27-04-2024-13:20', '27-04-2024-16:00', 2),
+    (NULL, 'closed', 'Palka', 'Corolla', 'SSS000', 'Engine failure', '26-04-2024-12:00', '26-04-2024-16:00', NULL),
+    (NULL, 'closed', 'Dalka', 'Corolla', 'KRT323', 'Engine failure', '25-04-2024-12:00', '25-04-2024-16:00', NULL)
 ''')
 
 c.execute('''SELECT * FROM employees''')
