@@ -1,3 +1,4 @@
 .ui
 *.pyc
-__pycache__/venv/
+__pycache__/
+venv/
